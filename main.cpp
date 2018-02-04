@@ -1,9 +1,11 @@
 #include <iostream>
 
-#include "mainwindow.h"
 #include <QApplication>
 #include <QSslSocket>
 #include <QDebug>
+
+#include "mainwindow.h"
+MainWindow *mainwin = nullptr;
 
 using namespace std;
 int main(int argc, char *argv[])
@@ -14,8 +16,8 @@ int main(int argc, char *argv[])
     
     a.addLibraryPath(QString("/usr/local/ssl/lib"));
     
-    MainWindow w;
-    w.show();
+    mainwin = new MainWindow;
+    mainwin->show();
 
     return a.exec();
 }

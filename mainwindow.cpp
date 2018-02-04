@@ -5,8 +5,13 @@
 #include <myhtml/api.h>
 #include <myhtml/tree.h>
 
+#include <functional>
+#include <iostream>
+using namespace std;
+
 #include <QMessageBox>
 #include <QStringList>
+#include <QTimer>
 #include <QListWidgetItem>
 #include <QTextDocument>
 #include <QSettings>
@@ -16,11 +21,10 @@
 #include <QDomElement>
 #include <QDebug>
 
-#include "mainwindow.h"
-#include "dialoga.h"
+#include "./mainwindow.h"
+#include "./dialoga.h"
 
-#include "ui_mainwindow.h"
-#include "ui_dialoga.h"
+std::function<void(int,QString,QString)> func;
 
 static const char techcrunch[] = "techcrunch.com";
 
@@ -33,20 +37,31 @@ QList<articleStruct> articles;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    QString setfile =
-    QApplication::applicationDirPath() + "/settings.ini";
-    settingFileName = setfile;
+    settingFileName = QString("%1/%2").
+    arg(QApplication::applicationDirPath()).
+    arg(QString("settings.ini"));
+    
     loadLwItem();
+
+    ui->comboBoxRange->setEditable(true);
+    ui->comboBoxRange->lineEdit()->setReadOnly(true);
+    ui->comboBoxRange->lineEdit()->setAlignment(Qt::AlignCenter);
+    for (int i = 0 ; i < ui->comboBoxRange->count() ; ++i)
+    ui->comboBoxRange->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
+    ui->comboBoxRange->setEditable(false);
 
     myhtml = myhtml_create();
     myhtml_init(myhtml, MyHTML_OPTIONS_PARSE_MODE_SINGLE, 1, 0);
 
     tree = myhtml_tree_create();
     myhtml_tree_init(tree, myhtml);
+
+    func = [this](int a, QString s1, QString s2) {
+        return checkAndLoadData(a,s1,s2);
+    };
 }
 
 MainWindow::~MainWindow()
@@ -64,7 +79,7 @@ void MainWindow::showEvent(QShowEvent *ev)
 }
 
 // Daten auffrischen ...
-void MainWindow::on_pushButton_4_clicked()
+void MainWindow::on_refreshData_clicked()
 {
 //    articles .clear();
 }
@@ -160,7 +175,7 @@ void MainWindow::httpDownloadFinished()
     ui->progressBar->setMaximum(100);
     ui->progressBar->setValue  (100);
 
-    ui->listTopics->clear();
+    ui->listTopicsBox->clear();
 
     const char *data = html_data.data();
 
@@ -201,7 +216,7 @@ void MainWindow::httpDownloadFinished()
                 item->setText(QString(str2.data));
                 item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
                 item->setCheckState(Qt::Unchecked);
-                ui->listTopics->addItem(item);
+                ui->listTopicsBox->addItem(item);
                 
                 {
                     struct articleStruct ar;
@@ -253,28 +268,20 @@ void MainWindow::loadTechCrunch(topic_type topic)
     }
 }
 
-void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
-{
-    if (item->text(column).contains(techcrunch)) {
-        loadTechCrunch(TOPIC_AI);
-    }
-    ui->pushButton->setEnabled(true);
-}
-
-void MainWindow::on_listTopics_itemDoubleClicked(QListWidgetItem *item)
+void MainWindow::on_listTopicsBox_itemDoubleClicked(QListWidgetItem *item)
 {
     const char *data = html_data.data();
 
-    if (ui->listTopics->currentItem() == item)
-    qDebug() << "Ok: " << ui->listTopics->currentRow(); else
+    if (ui->listTopicsBox->currentItem() == item)
+    qDebug() << "Ok: " << ui->listTopicsBox->currentRow(); else
     qDebug() << "False!!!";
 
-    int index = ui->listTopics->currentRow();
+    int index = ui->listTopicsBox->currentRow();
     if (index >  2) index = index - 1; else
     if (index == 2) index = index - 1;
 
     // the following code is ok, and independed of code above
-    ui->titelLabel->setText(
+    ui->topicTitle->setText(
     QString("<b>Titel:</b> %1")
     .arg(item->text()));
 
@@ -359,10 +366,15 @@ void MainWindow::on_translateError(QProcess::ProcessError err)
     return;
 }
 
-void MainWindow::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column)
+void MainWindow::on_sitesBox_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
     Q_UNUSED(column);
     Q_UNUSED(item);
+    
+    if (item->text(column).contains(techcrunch)) {
+        loadTechCrunch(TOPIC_AI);
+    }
+    ui->pushButton->setEnabled(true);
 }
 
 void MainWindow::setLinkItems(int row)
@@ -426,67 +438,58 @@ void MainWindow::saveLwItem()
 }
 
 // add new link-name ...
-void MainWindow::on_pushButton_7_clicked()
+void MainWindow::on_addNewLinkName_clicked()
 {
-    auto *da = new DialogA(this);
-    da->exec();
+    ItemDialogA p;
+    p.exec();
     
-    if (da->ui->lineEdit->text().trimmed().isEmpty()) {
-        QMessageBox::warning(this,"Warnung","keine Eingabe.\nAktion abgewiesen!");
-        return;
-    }
-    
-    if (da->ui->lineEdit_2->text().trimmed().isEmpty()) {
-        QMessageBox::warning(this,"Warnung","keine Gruppe angegeben.");
-        return;
-    }
+    /*
+    check_settings_func = this->checkAndLoadData(
+    0,
+    p.ui->lineEdit,
+    p.ui->lineEdit_2);*/
+}
 
-    QString str1 = da->ui->lineEdit  ->text().trimmed();
-    QString str2 = da->ui->lineEdit_2->text().trimmed();
-
-    if (str1.contains("/")
-    ||  str2.contains("/")) {
-        QMessageBox::warning(this,
-        QString(tr("Warnung")),
-        QString(tr("ungültige Zeichen in Bezeichner:\n%1").arg(
-        QString("/"))));
-        delete da;
-        return;
-    }
-    
-    QString str3, str4;
-    str3  = str1;
-    str3  = str3.append("/" );
-    str3  = str3.append(str2);
-
+void MainWindow::checkAndLoadData(int mode, QString str1, QString str2)
+{
     bool found = false;
-    for (int i = 0; i < ui->listWidget->count(); i++) {
-        str4 = ui->listWidget->item(i)->text().trimmed();
-        if (str4 == str3) {
-            QMessageBox::warning(this,"Warnung","Eintrag bereits vorhanden.");
-            found = true;
-            break;
-        }
-    }
+    
+    if (mode == 0) {
+        QString str3, str4;
+        str3  = str1;
+        str3  = str3.append("/" );
+        str3  = str3.append(str2);
 
-    if (found) return;
+        for (int i = 0; i < ui->listWidget->count(); i++) {
+            str4 = ui->listWidget->item(i)->text().trimmed();
+            if (str4 == str3) {
+                QMessageBox::warning(0,"Warnung","Eintrag bereits vorhanden.");
+                found = true;
+                break;
+            }
+        }
+        if (found) return;
     
-    QListWidgetItem *item = new
-    QListWidgetItem(ui->listWidget);
-    item->setText(str3);
-    ui->listWidget->addItem(item);
+        QListWidgetItem *item = new
+        QListWidgetItem(ui->listWidget);
+        item->setText(str3);
+        ui->listWidget->addItem(item);
     
-    QFont font;
-    font.setBold(true);
+        QFont font;
+        font.setBold(true);
+        
+        QTreeWidget *tree = ui->sitesBox;
+        QTreeWidgetItem *topw = new QTreeWidgetItem();
+        topw->setText(0,str2);
+        topw->setFont(0,font);
+        tree->addTopLevelItem(topw);
+        
+        return;
+    }
     
-    QTreeWidget *tree = ui->treeWidget;
-    QTreeWidgetItem *topw = new QTreeWidgetItem();
-    topw->setText(0,str2);
-    topw->setFont(0,font);
-    tree->addTopLevelItem(topw);
-    
-    archiveDirName =
-    QApplication::applicationDirPath() + "/arch";
+    archiveDirName = QString("%1/%2").
+    arg(QApplication::applicationDirPath()).
+    arg(QString("arch"));
     
     QDir arch("arch");
     found = true;
@@ -508,7 +511,7 @@ void MainWindow::on_pushButton_7_clicked()
         return;
     }
     
-    QDate datum(QDate::currentDate());
+    datum = QDate::currentDate();
     bool val = datum.isValid();
     
     if (!val) {
@@ -536,6 +539,14 @@ void MainWindow::on_pushButton_7_clicked()
         tr("einrichten müssen.\n\n") +
         tr("Im letzteren Fall, klicken Sie bitte auf 'Anwenden'")),
         buttons);
+    
+        ui->topicPageWidget->setTabEnabled(0,true);
+        ui->topicPageWidget->setTabText(0,dstr);
+        
+        QTimer *timer1 = new QTimer;
+        timer1->setInterval(1000);
+        connect(timer1, SIGNAL(timeout()), this, SLOT(timer1_update()));
+        timer1->start();
     }
     
     //QFile nwFile(arch.filePath());
@@ -552,4 +563,10 @@ void MainWindow::on_pushButton_8_clicked()
 void MainWindow::on_pushButton_11_clicked()
 {
     saveLwItem();
+}
+
+void MainWindow::timer1_update()
+{
+    ui->vonDatum->setDate(datum);
+    ui->vonTime ->setTime(QTime::currentTime());
 }

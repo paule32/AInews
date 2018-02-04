@@ -2,20 +2,23 @@
 #define DIALOGA_H
 
 #include <QDialog>
+#include <QAbstractButton>
+#include <QWidget>
 
-namespace Ui {
-class DialogA;
-}
+#include "./ui_dialoga.h"
 
-class DialogA : public QDialog
+class ItemDialogA : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit DialogA(QWidget *parent = 0);
-    ~DialogA();
+    explicit ItemDialogA(QWidget *parent = 0);
+    ~ItemDialogA();
 
-    Ui::DialogA *ui;
+    Ui::ItemDialogA *ui;
+    
+private slots:
+    void on_buttonBox_clicked(QAbstractButton *button);
 };
 
 #endif // DIALOGA_H
