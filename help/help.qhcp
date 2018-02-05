@@ -3,12 +3,12 @@
     <docFiles>
         <generate>
             <file>
-                <input>dBaseHelp.qhp</input>
-                <output>dBaseHelp.qch</output>
+                <input>help.qhp</input>
+                <output>help.qch</output>
             </file>
         </generate>
         <register>
-            <file>dBaseHelp.qch</file>
+            <file>help.qch</file>
         </register>
     </docFiles>
 </QHelpCollectionProject>

@@ -1,9 +1,6 @@
-#include <QDialog>
-#include <QWidget>
-#include <QAbstractButton>
-#include <QMessageBox>
+#include "./headers.h"
 
-#include "./dialoga.h"
+extern std::function<void(int,QString,QString)> check_setting_func;
 
 ItemDialogA::ItemDialogA(QWidget *parent) :
     QDialog(parent),
@@ -46,5 +43,5 @@ void ItemDialogA::on_buttonBox_clicked(QAbstractButton *button)
         return;
     }
     
-    //check_settings_func(0,str1,str2);
+    check_setting_func(0,str1,str2);
 }

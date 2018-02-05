@@ -1,30 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "./headers.h"
+#include <QSplitter>
 
-#include <myhtml/api.h>
-#include <myhtml/tree.h>
+#include <QHelpContentItem>
+#include <QHelpContentModel>
+#include <QHelpContentWidget>
+#include <QHelpIndexModel>
+#include <QHelpIndexWidget>
 
-#include <functional>
-#include <iostream>
-using namespace std;
-
-#include <QMessageBox>
-#include <QStringList>
-#include <QTimer>
-#include <QListWidgetItem>
-#include <QTextDocument>
-#include <QSettings>
-#include <QNetworkReply>
-#include <QFileDialog>
-#include <QDomDocument>
-#include <QDomElement>
-#include <QDebug>
-
-#include "./mainwindow.h"
-#include "./dialoga.h"
-
-std::function<void(int,QString,QString)> func;
+std::function<void(int,QString,QString)> check_setting_func;
 
 static const char techcrunch[] = "techcrunch.com";
 
@@ -59,9 +42,15 @@ MainWindow::MainWindow(QWidget *parent) :
     tree = myhtml_tree_create();
     myhtml_tree_init(tree, myhtml);
 
-    func = [this](int a, QString s1, QString s2) {
+    // help panel
+    createHelpWindow();
+
+    check_setting_func = [this](int a, QString s1, QString s2) {
         return checkAndLoadData(a,s1,s2);
     };
+    check_setting_func(1,
+    QString(""),
+    QString(""));
 }
 
 MainWindow::~MainWindow()
@@ -569,4 +558,47 @@ void MainWindow::timer1_update()
 {
     ui->vonDatum->setDate(datum);
     ui->vonTime ->setTime(QTime::currentTime());
+}
+
+void MainWindow::on_actionAbout_Qt_triggered()
+{
+    QMessageBox::aboutQt(this,"Über Qt");
+}
+
+void MainWindow::createHelpWindow()
+{
+    QString hcstr = "/help/help.qch";
+    QString hfile = QApplication::applicationDirPath() + hcstr;
+    
+    QHelpEngine *
+    helpEngine = new QHelpEngine(hfile);
+    helpEngine->setupData();
+
+    QTabWidget* tWidget = new QTabWidget;
+    tWidget->setMaximumWidth(320);
+    tWidget->addTab(helpEngine->contentWidget(), "Contents");
+    tWidget->addTab(helpEngine->indexWidget(), "Index");
+
+    HelpBrowser *tViewer = new HelpBrowser(helpEngine);
+    tViewer->setSource(QUrl("qthelp://documents/doc/index.html"));
+    tViewer->setMinimumWidth(300);
+
+    connect(helpEngine->contentWidget(),
+            SIGNAL(linkActivated(QUrl)), tViewer,
+            SLOT(setSource(QUrl)));
+    connect(helpEngine->indexWidget(),
+            SIGNAL(linkActivated(QUrl, QString)), tViewer,
+            SLOT(setSource(QUrl)));
+
+    QSplitter *m_panel = new
+    QSplitter(Qt::Horizontal);
+
+    m_panel->insertWidget(0, tViewer);
+    m_panel->insertWidget(1, tWidget);
+
+    ui->HelpBoxLayout->addWidget(m_panel);
+}
+
+void MainWindow::openIndexHelp()
+{
 }

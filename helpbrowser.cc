@@ -1,5 +1,5 @@
 #ifndef HELPBROWSER_H
-# include "../headers.h"
+# include "headers.h"
 #define HELPBROWSER_H
 #endif
 
@@ -34,7 +34,7 @@ HelpBrowser::HelpBrowser(
     
     QString hlpFile =
     QApplication::applicationDirPath() +
-    QString("/help/dBaseHelp.qhc");   
+    QString("/help/help.qhc");   
     QFileInfo info(hlpFile);
 
     if (!info.exists(hlpFile)) {

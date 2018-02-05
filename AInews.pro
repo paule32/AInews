@@ -14,19 +14,22 @@ QMAKE_LFLAGS += ./data/*.o
 SOURCES += main.cpp\
         mainwindow.cpp \
     dialoga.cc \
-    dialoga.cc \
-    main.cpp \
-    mainwindow.cpp \
-    help/helpbrowser.cc
+    helpbrowser.cc \
+    helppopup.cc \
+    dockpagetopicsummary.cc \
+    topicintervallcombobox.cc
 
 HEADERS  += mainwindow.h \
     dialoga.h \
-    dialoga.h \
-    mainwindow.h \
-    help/helpbrowser.h
+    helpbrowser.h \
+    headers.h \
+    helppopup.h \
+    dockpagetopicsummary.h \
+    topicintervallcombobox.h
 
 FORMS    += mainwindow.ui \
-    dialoga.ui
+    dialoga.ui \
+    helppopup.ui
 
 RESOURCES += \
     resources.qrc
@@ -38,9 +41,10 @@ LIBS += -L./ -L/home/jens/AInews -lssl -lcrypto
 DISTFILES += \
     help/dBaseHelp.qch \
     help/dBaseHelp.qhc \
-    help/dBaseHelp.qhp \
     help/append.html \
     help/index.html \
     help/printline.html \
     help/test.html \
-    help/dBaseHelp.qhcp
+    help/dBaseHelp.qhcp \
+    help/help.qhp \
+    help/help.qhcp

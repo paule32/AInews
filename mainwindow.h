@@ -1,22 +1,33 @@
 #ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <myhtml/api.h>
 #include <myhtml/tree.h>
 
+#include <QObject>
+#include <QString>
 #include <QMainWindow>
-#include <QShowEvent>
-#include <QTreeWidget>
+#include <QStringList>
+#include <QByteArray>
+#include <QProcess>
+#include <QUrl>
+#include <QHelpEngineCore>
+#include <QHelpEngine>
 #include <QTreeWidgetItem>
 #include <QListWidgetItem>
-#include <QDate>
-#include <QProcess>
+
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QFileInfo>
 
-#include "ui_mainwindow.h"
+#include <QDate>
+#include <QFile>
+
+namespace Ui {
+class MainWindow;
+}
 
 enum topic_type {
     TOPIC_DEFAULT = 0,
@@ -35,7 +46,10 @@ public:
     void loadTechCrunch(topic_type);
     
     void checkAndLoadData(int, QString str1="", QString str2="");
+    void createHelpWindow();
     void setLinkItems(int row);
+    
+    void openIndexHelp();
     
     void loadLwItem();
     void saveLwItem();
@@ -43,6 +57,8 @@ public:
     QString settingFileName;
     QString archiveDirName;
     QString helpDirName;
+    
+    QHelpEngine * helpEngine;
     
 protected:
     virtual void showEvent(QShowEvent *event);
@@ -70,6 +86,7 @@ private slots:
     void on_addNewLinkName_clicked();
     void on_pushButton_8_clicked();
     void on_pushButton_11_clicked();
+    void on_actionAbout_Qt_triggered();
     
 private:
     myhtml_t* myhtml;
@@ -95,4 +112,5 @@ public:
 };
 
 extern MainWindow *mainwin;
+#define MAINWINDOW_H
 #endif // MAINWINDOW_H

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>documents</namespace>
+    <virtualFolder>doc</virtualFolder>
+    <filterSection>
+        <files>
+            <file>index.html</file>
+            <file>test.html</file>
+	</files>
+    </filterSection>
+</QtHelpProject>
