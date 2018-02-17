@@ -13,6 +13,7 @@
 #include <QByteArray>
 #include <QProcess>
 #include <QUrl>
+#include <QSettings>
 #include <QHelpEngineCore>
 #include <QHelpEngine>
 #include <QTreeWidgetItem>
@@ -48,17 +49,17 @@ public:
     void checkAndLoadData(int, QString str1="", QString str2="");
     void createHelpWindow();
     void setLinkItems(int row);
+    void setSettingFile();
+    void setSitesBoxData();
     
     void openIndexHelp();
     
     void loadLwItem();
     void saveLwItem();
-
+    
     QString settingFileName;
     QString archiveDirName;
     QString helpDirName;
-    
-    QHelpEngine * helpEngine;
     
 protected:
     virtual void showEvent(QShowEvent *event);
@@ -87,6 +88,10 @@ private slots:
     void on_pushButton_8_clicked();
     void on_pushButton_11_clicked();
     void on_actionAbout_Qt_triggered();
+    void on_comboBoxRange_currentIndexChanged(int index);
+    void on_listWidget_itemClicked(QListWidgetItem *item);
+    void on_listWidget2_itemClicked(QListWidgetItem *item);
+    void on_pushButton_7_pressed();
     
 private:
     myhtml_t* myhtml;
@@ -94,7 +99,9 @@ private:
 
     QStringList topics;
     QByteArray html_data;
-    QProcess * translate_process;
+    
+    QSettings * settings;
+    QProcess  * translate_process;
 
     QUrl url;
     QNetworkAccessManager *manager;

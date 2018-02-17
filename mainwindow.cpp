@@ -1,4 +1,5 @@
 #include "./headers.h"
+
 #include <QSplitter>
 
 #include <QHelpContentItem>
@@ -32,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBoxRange->setEditable(true);
     ui->comboBoxRange->lineEdit()->setReadOnly(true);
     ui->comboBoxRange->lineEdit()->setAlignment(Qt::AlignCenter);
+    
     for (int i = 0 ; i < ui->comboBoxRange->count() ; ++i)
     ui->comboBoxRange->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
     ui->comboBoxRange->setEditable(false);
@@ -44,6 +46,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // help panel
     createHelpWindow();
+    
+    // set precollected data ...
+    ui->sitesBox->clear();
+    setSitesBoxData();
 
     check_setting_func = [this](int a, QString s1, QString s2) {
         return checkAndLoadData(a,s1,s2);
@@ -257,6 +263,28 @@ void MainWindow::loadTechCrunch(topic_type topic)
     }
 }
 
+// rules - rulesTextEdit
+void MainWindow::on_pushButton_7_pressed()
+{
+    QMessageBox::StandardButtons buttons =
+    QMessageBox::Yes |
+    QMessageBox::No  | QMessageBox::Cancel;
+    
+    int result = QMessageBox::warning(0,
+    QString(tr("Warnung")),
+    QString(tr("Sollen alle Einträge gelöscht werden?.")),
+    buttons);
+    
+    switch (result) {
+    case QMessageBox::Cancel:
+    case QMessageBox::No:
+         return;
+         break;
+    case QMessageBox::Yes:
+         ui->rulesTextEdit->clear();
+         break;
+    }
+}
 void MainWindow::on_listTopicsBox_itemDoubleClicked(QListWidgetItem *item)
 {
     const char *data = html_data.data();
@@ -380,16 +408,29 @@ void MainWindow::loadLwItem()
 {
     QSettings *settings = new
     QSettings(settingFileName,QSettings::IniFormat);
-
-    articles.clear();    
-    int size = settings->beginReadArray("ai/techcruch/AI");
+    
+    struct tmp {
+        QString name;
+        QString top;
+    };
+    tmp tmpstr;
+    QList<tmp> strpop;
+   
+    ui->listWidget->clear();
+    int size = settings->beginReadArray("sections");
     for (int i = 0; i < size; ++i) {
         settings->setArrayIndex(i);
-        articleStruct tops;
-        tops.topic = settings->value("topic").toString();
-        tops.file  = settings->value("file" ).toInt();
-        articles.append(tops);
+        tmpstr.name = settings->value("name").toString();
+        tmpstr.top  = settings->value("top" ).toString();
+        
+        QString top = QString("%1/%2")
+        .arg(tmpstr.name)
+        .arg(tmpstr.top );
+        
+        ui->listWidget->addItem(top);
+        strpop.append(tmpstr);
     }
+    
     settings->endArray();
     delete settings;
 }
@@ -397,29 +438,14 @@ void MainWindow::loadLwItem()
 void MainWindow::saveLwItem()
 {
     QSettings *settings = nullptr;
+    QString cat;
     settings = new QSettings(settingFileName,QSettings::IniFormat);
     
-    int lcnt = ui->listWidget->count();
-    int rcnt = 0;
-    
-    if (lcnt < 1) return;
-    for (int i = 0; i < lcnt; ++i) {
-        rcnt = ui->listWidget2->count();
-        if (rcnt < 1) {
-            if (i < lcnt)
-            continue; else
-            break;
-        }
-        for (int j = 0; i < rcnt; ++j) {
-        
-        }
-    }
-    
-    settings->beginWriteArray("ai/techcruch/AI");
-    for (int i = 0; i < articles.count(); i++) {
+    settings->beginWriteArray("sections");
+    for (int i = 0; i < ui->listWidget->count(); ++i) {
         settings->setArrayIndex(i);
-        settings->setValue("topic",articles.at(i).topic);
-        settings->setValue("file" ,articles.at(i).file );
+        cat = ui->listWidget->item(i)->text();
+        settings->setValue("name",cat);
     }   settings->sync();
         settings->endArray();
     
@@ -431,12 +457,6 @@ void MainWindow::on_addNewLinkName_clicked()
 {
     ItemDialogA p;
     p.exec();
-    
-    /*
-    check_settings_func = this->checkAndLoadData(
-    0,
-    p.ui->lineEdit,
-    p.ui->lineEdit_2);*/
 }
 
 void MainWindow::checkAndLoadData(int mode, QString str1, QString str2)
@@ -469,8 +489,14 @@ void MainWindow::checkAndLoadData(int mode, QString str1, QString str2)
         
         QTreeWidget *tree = ui->sitesBox;
         QTreeWidgetItem *topw = new QTreeWidgetItem();
+        QTreeWidgetItem *chlw = new QTreeWidgetItem();
+        
         topw->setText(0,str2);
         topw->setFont(0,font);
+        
+        chlw->setText(0,str1);
+        topw->addChild(chlw);
+        
         tree->addTopLevelItem(topw);
         
         return;
@@ -567,28 +593,19 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 void MainWindow::createHelpWindow()
 {
-    QString hcstr = "/help/help.qch";
-    QString hfile = QApplication::applicationDirPath() + hcstr;
-    
-    QHelpEngine *
-    helpEngine = new QHelpEngine(hfile);
-    helpEngine->setupData();
-
     QTabWidget* tWidget = new QTabWidget;
     tWidget->setMaximumWidth(320);
-    tWidget->addTab(helpEngine->contentWidget(), "Contents");
-    tWidget->addTab(helpEngine->indexWidget(), "Index");
-
-    HelpBrowser *tViewer = new HelpBrowser(helpEngine);
-    tViewer->setSource(QUrl("qthelp://documents/doc/index.html"));
-    tViewer->setMinimumWidth(300);
-
-    connect(helpEngine->contentWidget(),
+ 
+    HelpBrowser *tViewer = new HelpBrowser(this);
+    QObject::connect(tViewer->helpEngine->contentWidget(),
             SIGNAL(linkActivated(QUrl)), tViewer,
             SLOT(setSource(QUrl)));
-    connect(helpEngine->indexWidget(),
+    QObject::connect(tViewer->helpEngine->indexWidget(),
             SIGNAL(linkActivated(QUrl, QString)), tViewer,
             SLOT(setSource(QUrl)));
+
+    tWidget->addTab(tViewer->helpEngine->contentWidget(), "Contents");
+    tWidget->addTab(tViewer->helpEngine->indexWidget(), "Index");
 
     QSplitter *m_panel = new
     QSplitter(Qt::Horizontal);
@@ -601,4 +618,213 @@ void MainWindow::createHelpWindow()
 
 void MainWindow::openIndexHelp()
 {
+}
+
+void MainWindow::setSettingFile()
+{
+    settingFileName = QString("%1/%2").
+    arg(QApplication::applicationDirPath()).
+    arg(QString("settings.ini"));
+    
+    settings= new QSettings(settingFileName,QSettings::IniFormat);
+}
+
+// rechte box
+void MainWindow::on_listWidget2_itemClicked(QListWidgetItem *item)
+{
+    QString str = item->text();
+    
+    /*
+    QFont font;
+    font.setBold(true);
+    
+    QTreeWidget *tree = ui->sitesBox;
+    QTreeWidgetItem *topw = new QTreeWidgetItem();
+    topw->setText(0,str2);
+    topw->setFont(0,font);
+    tree->addTopLevelItem(topw);*/
+}
+
+void MainWindow::setSitesBoxData()
+{
+    QString s1,s2;
+    setSettingFile();
+    
+    QFont font;
+    font.setBold(true);
+
+    QTreeWidget     *tree = ui->sitesBox;
+    QTreeWidgetItem *artw;
+    QTreeWidgetItem *topw;
+
+    QList<QString> cont;  // to check for duplicates
+    tree->clear();
+    
+    int size = settings->beginReadArray("sections");
+    for (int i = 0; i < size; i++) {
+        settings->setArrayIndex(i);
+        s1 = settings->value("name").toString();
+        s2 = settings->value("top" ).toString();
+        
+        if (cont.count() < 1) {
+            cont.append(s2);
+            artw = new QTreeWidgetItem();
+            artw->setText(0,s2);
+            artw->setFont(0,font);
+            tree->addTopLevelItem(artw);
+        }
+        
+        if (!cont.contains(s2)) {
+            cont.append(s2);
+            artw = new QTreeWidgetItem();
+            artw->setText(0,s2);
+            artw->setFont(0,font);
+            tree->addTopLevelItem(artw);
+        }
+        else {
+            topw = new QTreeWidgetItem();
+            topw->setText(0,s1);
+            artw->addChild(topw);
+        }
+    }
+    
+    settings->endArray();
+    delete settings;
+}
+
+void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
+{
+    QString str = item->text();
+    qDebug() << str;
+    
+    if (!str.contains(QString("/"))) {
+        QString s;
+        int  pos ;
+        if ((pos = str.indexOf("/")) < 0) {
+            QMessageBox::warning(this,"Warnung",
+            QString("keine Untergruppe angegeben."));
+            return;
+        }
+    }
+    
+    setSettingFile();
+
+// TODO
+    QString s1, s2;
+    qDebug() << str;
+    
+    if (str.trimmed().length() < 1) {
+        QMessageBox::warning(this,
+        QString("Warnung"),
+        QString("ungültiger Eintrag."));
+        return;
+    }
+    
+    if (str.contains("/")) {
+        QList<QString> list = str.split("/");
+        s1 = list.at(0);
+        s2 = list.at(1);
+        
+        QTreeWidget *tree = ui->sitesBox;
+        qDebug() << "AT: " << s1 << s2;
+        
+        QList<QTreeWidgetItem*> clist =
+        tree->findItems(s2,
+        Qt::MatchContains |
+        Qt::MatchRecursive, 0);
+        
+        if (clist.length() > 0) {
+            QMessageBox::warning(this,
+            QString(tr("Warnung")),
+            QString("Eintrag bereits vorhanden."));
+            
+            return;
+        }
+
+        int sz = settings->beginReadArray("sections");
+        settings->endArray();
+        settings->beginWriteArray("sections");
+        for (int i = 0; i < sz; ++i) {
+            settings->setArrayIndex(i);
+            settings->setValue("name", s1);
+            settings->setValue("top" , s2);
+        }
+        settings->endArray();
+
+
+        
+        QFont font;
+        font.setBold(true);
+        
+        QTreeWidgetItem *topw = new QTreeWidgetItem();
+        QTreeWidgetItem *artw = new QTreeWidgetItem();
+        
+        artw->setText(0,s1);
+        topw->setText(0,s2);
+        topw->setFont(0,font);
+        
+        topw->addChild(artw);
+        tree->addTopLevelItem(topw);
+    }
+    
+    QString top;
+    QList<QString> tops; 
+
+/*
+QStringList   list2;
+list2.append("abc");
+list2.append("125");
+
+QList<QString> list;
+list.append(QString("https://techcrunch.com/artificial-intelligence-2"));
+list.append(QString("welt" ));
+settings->beginWriteArray(str);
+for (int i = 0; i < list.size(); ++i) {
+    settings->setArrayIndex(i);
+    settings->setValue("link", list.at(i));
+    settings->setValue("rule", list2);
+}
+settings->endArray();
+*/
+
+    int size = settings->beginReadArray(str);
+    for (int i = 0; i < size; ++i) {
+        settings->setArrayIndex(i);
+        top = settings->value("link").toString();
+        tops.append(top);
+    }
+    
+    ui->listWidget2->clear();
+    ui->listWidget2->addItems(tops);
+    
+    tops.clear();
+    settings->endArray();
+    delete settings;
+}
+
+void MainWindow::on_comboBoxRange_currentIndexChanged(int index)
+{
+    QDate datum = QDate::currentDate();
+    
+    ui->topicPageWidget->clear();
+    switch (index) {
+    // 1 day
+    case 0: {
+        QWidget *page = new QWidget;
+        ui->topicPageWidget->addTab(page,datum.toString("dd.MM.yyyy"));
+    }
+    break;
+    
+    // 1 week
+    case 1: {
+        std::array<QWidget*, 7> page;
+        for (int i=0;i<7;i++) {
+            page[i] = new QWidget;
+            QString str = datum.toString("dd.MM.yyyy");
+            ui->topicPageWidget->addTab(page[i],str);
+            datum = datum.addDays(1);
+        }
+    }
+    break;
+    }
 }

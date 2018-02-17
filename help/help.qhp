@@ -2,10 +2,22 @@
 <QtHelpProject version="1.0">
     <namespace>documents</namespace>
     <virtualFolder>doc</virtualFolder>
+    <customFilter name="AInews">
+        <filterAttribute>AInews</filterAttribute>
+    </customFilter>
     <filterSection>
+        <filterAttribute>AInews</filterAttribute>
+            <toc>
+                <section title="Help - Welcome" ref="index.html">
+                    <section title="Chapter 1" ref="test.html"/>
+                </section>
+            </toc>
+        <keywords>
+            <keyword name="Insert rectangle" id="AInews::test" ref="test.html#"/>
+        </keywords>
         <files>
             <file>index.html</file>
             <file>test.html</file>
-	</files>
+        </files>
     </filterSection>
 </QtHelpProject>

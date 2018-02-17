@@ -73,7 +73,7 @@ using namespace std;
 #endif
 
 #ifndef HELPBROWSER_H
-# include "./help/helpbrowser.h"
+# include "helpbrowser.h"
 #endif
 
 #define HEADERS_H

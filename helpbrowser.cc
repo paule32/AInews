@@ -4,10 +4,8 @@
 #endif
 
 HelpBrowser::HelpBrowser(
-    QHelpEngine * helpEngine,
-    QWidget     * parent )
+    QWidget * parent )
     : QTextBrowser(parent)
-    , helpEngine(helpEngine)
 {
     QString hdir = "/help";
     QString path = QApplication::applicationDirPath() + hdir;
@@ -32,18 +30,31 @@ HelpBrowser::HelpBrowser(
         return;
     }
     
-    QString hlpFile =
-    QApplication::applicationDirPath() +
-    QString("/help/help.qhc");   
-    QFileInfo info(hlpFile);
+    QString hfs = path + "/help.qch";
+    QString cfs = path + "/help.qhc";
+    
+    qDebug() << "helpfile:" << hfs;
+    qDebug() << "collectf:" << cfs;
+    
+    QFileInfo info(hfs);
 
-    if (!info.exists(hlpFile)) {
+    if (!info.exists(hfs)) {
         QMessageBox::warning(this,
         QString(tr("Application Warning")),
         QString(tr("Helpfile not found.")));
         
         return;
     }
+    
+    setAcceptRichText(false);
+    setMinimumWidth(300);
+    
+    helpEngine = new QHelpEngine (hfs);
+    helpEngine->setupData();
+    helpEngine->setCollectionFile(cfs);
+    
+    setSource(QUrl("qthelp://documents/doc/index.html"));
+    //setSource(helpEngine->findFile(QUrl("/doc/index.html").toString()));
 }
 
 QVariant HelpBrowser::loadResource(int type, const QUrl &name)

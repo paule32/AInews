@@ -45,6 +45,6 @@ DISTFILES += \
     help/index.html \
     help/printline.html \
     help/test.html \
-    help/dBaseHelp.qhcp \
     help/help.qhp \
-    help/help.qhcp
+    help/help.qhcp \
+    ../build-AInews-Desktop_Qt_5_10_0_GCC_64bit-Debug/settings.ini
