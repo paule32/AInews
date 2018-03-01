@@ -1,4 +1,6 @@
 #ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,6 +15,7 @@
 #include <QByteArray>
 #include <QProcess>
 #include <QUrl>
+#include <QMessageBox>
 #include <QSettings>
 #include <QHelpEngineCore>
 #include <QHelpEngine>
@@ -30,11 +33,6 @@ namespace Ui {
 class MainWindow;
 }
 
-enum topic_type {
-    TOPIC_DEFAULT = 0,
-    TOPIC_AI
-};
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -44,9 +42,11 @@ public:
     ~MainWindow();
 
 public:
-    void loadTechCrunch(topic_type);
+    void loadTech();
     
-    void checkAndLoadData(int, QString str1="", QString str2="");
+    void    checkAndLoadData(int, QString str1="", QString str2="");
+    QString checkAndCreateDataFolder(QString dir);
+    
     void createHelpWindow();
     void setLinkItems(int row);
     void setSettingFile();
@@ -69,6 +69,7 @@ signals:
 
 private slots:
     void timer1_update();
+    void errorString(QString err);
     
     void httpReadyRead();
     void httpDownloadFinished();
@@ -107,6 +108,7 @@ private:
     QNetworkAccessManager *manager;
     QNetworkRequest request;
     QNetworkReply *reply;
+    QVector<QNetworkReply *> currentDownloads;
     
     QString fileName;
     QDate datum;
@@ -119,5 +121,6 @@ public:
 };
 
 extern MainWindow *mainwin;
-#define MAINWINDOW_H
+extern QString     appDirPath;
+
 #endif // MAINWINDOW_H

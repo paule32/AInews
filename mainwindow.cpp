@@ -1,6 +1,4 @@
-#include "./headers.h"
-
-#include <QSplitter>
+#include "headers.h"
 
 #include <QHelpContentItem>
 #include <QHelpContentModel>
@@ -8,9 +6,31 @@
 #include <QHelpIndexModel>
 #include <QHelpIndexWidget>
 
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+
+#include "dialoga.h"
+#include "ui_dialoga.h"
+
+#include "helpbrowser.h"
+
+QString appDirPath;
 std::function<void(int,QString,QString)> check_setting_func;
 
-static const char techcrunch[] = "techcrunch.com";
+class ArtikelDatum
+{
+public:
+    ArtikelDatum() { }
+    QString     topic;
+    QDateTime   datTime;
+};
+class Artikel : public ArtikelDatum
+{
+public:
+    Artikel() { }
+    QStringList text;
+};
+QVector<Artikel *> ArtikelListe;
 
 struct articleStruct {
     QString topic;
@@ -23,10 +43,16 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
+    
+    settingFileName = QString("%1/%2")
+    .arg(appDirPath)
+    .arg(QString("settings.ini"));
 
-    settingFileName = QString("%1/%2").
-    arg(QApplication::applicationDirPath()).
-    arg(QString("settings.ini"));
+    settings = nullptr;
+    settings = new
+        QSettings(settingFileName,
+        QSettings::IniFormat);
+    
     
     loadLwItem();
 
@@ -64,6 +90,7 @@ MainWindow::~MainWindow()
     myhtml_tree_destroy(tree);
     myhtml_destroy(myhtml);
 
+    delete settings;
     delete ui;
 }
 
@@ -76,6 +103,41 @@ void MainWindow::showEvent(QShowEvent *ev)
 // Daten auffrischen ...
 void MainWindow::on_refreshData_clicked()
 {
+    QString filePathTmp = 
+    appDirPath + "/data/arch/";
+    
+    QString fileName = filePathTmp + "index.gz";
+    QString filePath = QDir(fileName).filePath(fileName);
+    
+    QDir testDir = QFileInfo(filePath).dir();  
+    if (!testDir.exists()) {
+        if (!testDir.mkpath(testDir.path())) {
+            qWarning("could not make path: %s",
+            testDir.path().toUtf8().constData());
+            return;
+        }
+        if (fileName.endsWith('/')) {
+            qWarning("could not make path: %s",
+            fileName.toUtf8().constData());
+            return;
+        }
+        qWarning("data storage error");
+        return;
+    }   else {
+        QFile testFile(filePath);
+        if (!testFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qWarning("could not create: %s",
+            fileName.toUtf8().constData());
+            return;
+        }
+        
+        QTextStream testStream(&testFile);
+        testStream
+            << "This is a test file named: "
+            << fileName
+            << endl;
+    }
+
 //    articles .clear();
 }
 
@@ -110,7 +172,7 @@ void MainWindow::on_MainWindow_windowBecomesFocus()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    loadTechCrunch(TOPIC_AI);
+    loadTech();
 }
 
 void MainWindow::httpDownloadProgress(qint64 bytesRead, qint64 totalBytes)
@@ -127,10 +189,9 @@ void MainWindow::httpReadyRead()
 void MainWindow::httpDownloadFinished()
 {
     QFileInfo fileInfo(url.path());
-    fileName = fileInfo.fileName(); if (fileName.isEmpty())
+    fileName = fileInfo.fileName();
     fileName = "index.html";
 
-    int tsize = 0;
     if (QFile::exists(fileName)) {
         if (QMessageBox::question(this, tr("HTTP"),
                 tr("Es existiert bereits eine Datei unter den Namen: %1 im "
@@ -152,7 +213,7 @@ void MainWindow::httpDownloadFinished()
 
     html_data.clear();
 
-    int rsize = reply->size();
+    qint64 rsize = reply->size();
     qDebug() << rsize;
 
     ui->progressBar->setValue(0);
@@ -171,6 +232,7 @@ void MainWindow::httpDownloadFinished()
     ui->progressBar->setValue  (100);
 
     ui->listTopicsBox->clear();
+    ArtikelListe.clear();
 
     const char *data = html_data.data();
 
@@ -212,44 +274,60 @@ void MainWindow::httpDownloadFinished()
                 item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
                 item->setCheckState(Qt::Unchecked);
                 ui->listTopicsBox->addItem(item);
-                
-                {
-                    struct articleStruct ar;
-                    ar.topic = item->text();
-                    ar.file  = ++tsize;
-                    articles.append(ar);
-                }
-                
+
+
+                class   Artikel  * artikel = new Artikel;
+                artikel->topic   = item->text();
+                artikel->datTime = QDateTime::currentDateTime();
+                artikel->text.append("Schnuller");
+                ArtikelListe.append(artikel);
+
                 str2.data = (char*)mycore_free(str2.data);
             }
         }
     }
-  
-    QString buffer;
-    QSettings *settings = nullptr;
-    settings = new QSettings(settingFileName,QSettings::IniFormat);
-           
-    for (int index = 0; index < tsize-1; index++) {
-        buffer.clear();
-        buffer.append(QString("%1").
-        arg(articles.at(index).topic));
-                
-        settings->setValue(QString("ai/techcruch-%1").arg(index),buffer);
-    }   settings->sync();
-    
-    delete settings;
+
+    delete manager;
 }
 
-void MainWindow::loadTechCrunch(topic_type topic)
+void MainWindow::loadTech()
 {
-    if (topic == TOPIC_AI)
-    {
-        manager = new QNetworkAccessManager(this);
-        url = QUrl("https://techcrunch.com/artificial-intelligence-2/");
+    QString name;
 
+    QList<QString> lister;
+    QList<QUrl>    urlser;
+    
+    int size = settings->beginReadArray("AI");
+    for (int i = 0; i < size; ++i) {
+        settings->setArrayIndex(i);
+        name = settings->value("name").toString();
+        lister.append(name);
+    }
+    settings->endArray();
+    
+    for (int j = 0; j < lister.count()-1; ++j) {
+        size = settings->beginReadArray(lister.at(j));
+        for (int i = 0; i < size; ++i) {
+            settings->setArrayIndex(i);
+            name = settings->value("link").toString();
+            qDebug() << ":: " << name;
+            urlser.append(name);
+        }
+        settings->endArray();
+    }
+    
+    manager = new QNetworkAccessManager(this);
+    
+    for (int i = 0; i < urlser.count(); ++i)
+    {
+        QString tmp = urlser.at(i).toString();
+        if (!tmp.endsWith('/')) tmp = tmp + "/";
+        
+        url = QUrl(tmp);
+       
         request.setRawHeader("User-Agent", "Mozilla/5.0 (Mobile; rv:26.0)");
         request.setUrl(url);
-
+        
         reply = manager->get(request);
 
         connect(reply,SIGNAL(downloadProgress(qint64,qint64)),
@@ -288,19 +366,24 @@ void MainWindow::on_pushButton_7_pressed()
 void MainWindow::on_listTopicsBox_itemDoubleClicked(QListWidgetItem *item)
 {
     const char *data = html_data.data();
-
-    if (ui->listTopicsBox->currentItem() == item)
-    qDebug() << "Ok: " << ui->listTopicsBox->currentRow(); else
-    qDebug() << "False!!!";
+    int row = ui->listTopicsBox->currentRow();
+    if (ui->listTopicsBox->currentItem() == item) {
+        qDebug() << ArtikelListe.at(row)->topic;
+        qDebug() << "Ok: " << row; 
+    } else {
+        qDebug() << "False!!!";
+    }
 
     int index = ui->listTopicsBox->currentRow();
-    if (index >  2) index = index - 1; else
-    if (index == 2) index = index - 1;
+    if (index >= 2) index = index - 1;
 
     // the following code is ok, and independed of code above
     ui->topicTitle->setText(
     QString("<b>Titel:</b> %1")
     .arg(item->text()));
+    
+    ui->dockWidget_2->setFixedWidth(
+    ui->dockWidget_4->width());
 
     // parse html
     myhtml_parse(tree, MyENCODING_UTF_8,data,strlen(data));
@@ -316,7 +399,6 @@ void MainWindow::on_listTopicsBox_itemDoubleClicked(QListWidgetItem *item)
         myhtml_serialization_tree_buffer(element,&str);
 
         if (str.data) {
-            qDebug() << "-----\n" << str.data;
             QTextDocument * doc = new QTextDocument(str.data);
             
             /*
@@ -335,12 +417,34 @@ void MainWindow::on_listTopicsBox_itemDoubleClicked(QListWidgetItem *item)
 // translate
 void MainWindow::on_pushButton_6_clicked()
 {
+    // starting with inpatiant person's:)
+    QString file = 
+    appDirPath + "/data/pics/wait.gif";
+    
+    QUrl uri(QString("file://%1").arg(file));
+    QImage image = QImageReader(file).read();
+    
+    QTextDocument *textdoc = ui->translateTextBox->document();
+    textdoc->addResource(QTextDocument::ImageResource,
+    uri, QVariant(image));
+    
+    QTextCursor cursor = ui->translateTextBox->textCursor();
+    QTextImageFormat imageFormat;
+    
+    imageFormat.setWidth (image.width() );
+    imageFormat.setHeight(image.height());
+    imageFormat.setName( uri.toString() );
+    
+    cursor.insertImage(imageFormat);
+    
+    
+    // translate ...
     QStringList args;
     args << "-b"
          << QString("\"%1\"").arg(
             ui->artikelTextBox->document()->toPlainText());
 
-    QString transfile = QApplication::applicationDirPath() + "/trans";
+    QString transfile = appDirPath + "/trans";
     
     translate_process = new QProcess(window());
     translate_process->setProgram(transfile);
@@ -388,9 +492,10 @@ void MainWindow::on_sitesBox_itemDoubleClicked(QTreeWidgetItem *item, int column
     Q_UNUSED(column);
     Q_UNUSED(item);
     
-    if (item->text(column).contains(techcrunch)) {
-        loadTechCrunch(TOPIC_AI);
-    }
+    if (item->text(0) == "AI")
+    return;
+    
+    loadTech();
     ui->pushButton->setEnabled(true);
 }
 
@@ -398,17 +503,10 @@ void MainWindow::setLinkItems(int row)
 {
     ui->listWidget->setCurrentRow(row);
     ui->listWidget2->clear();
-    
-    //QSettings *settings =
-    //settings = new QSettings(settingFileName,QSettings::IniFormat);
-    //for (int index = 0; index < ui->listWidget2->count(); index++) {
 }
 
 void MainWindow::loadLwItem()
 {
-    QSettings *settings = new
-    QSettings(settingFileName,QSettings::IniFormat);
-    
     struct tmp {
         QString name;
         QString top;
@@ -432,24 +530,21 @@ void MainWindow::loadLwItem()
     }
     
     settings->endArray();
-    delete settings;
 }
 
 void MainWindow::saveLwItem()
 {
-    QSettings *settings = nullptr;
     QString cat;
-    settings = new QSettings(settingFileName,QSettings::IniFormat);
     
     settings->beginWriteArray("sections");
     for (int i = 0; i < ui->listWidget->count(); ++i) {
         settings->setArrayIndex(i);
         cat = ui->listWidget->item(i)->text();
         settings->setValue("name",cat);
-    }   settings->sync();
-        settings->endArray();
+    }
     
-    delete settings;
+    settings->sync();
+    settings->endArray();
 }
 
 // add new link-name ...
@@ -457,6 +552,36 @@ void MainWindow::on_addNewLinkName_clicked()
 {
     ItemDialogA p;
     p.exec();
+}
+
+QString MainWindow::checkAndCreateDataFolder(QString dir)
+{
+    bool found = false;
+
+    QString tmp =
+    QString("%1/data/%2/")
+    .arg(appDirPath)
+    .arg(QString(dir));
+    
+    QDir arch(dir);
+    found = true;
+    
+    if (!arch.exists())    { found = false;
+    if (!arch.mkdir (tmp)) { found = false;
+    if (!arch.mkpath(tmp)) { found = false;
+    
+    } else found = true;
+    } else found = true;
+    } else found = true;
+    
+    qDebug() << tmp;
+    
+    if (!found) {
+        QMessageBox::critical(this,
+        QString(tr("Warnung")),
+        QString(tr("das Verzeichnis konnte nicht erstellt werden")));
+        return QString("");
+    }   return tmp;
 }
 
 void MainWindow::checkAndLoadData(int mode, QString str1, QString str2)
@@ -502,29 +627,8 @@ void MainWindow::checkAndLoadData(int mode, QString str1, QString str2)
         return;
     }
     
-    archiveDirName = QString("%1/%2").
-    arg(QApplication::applicationDirPath()).
-    arg(QString("arch"));
-    
-    QDir arch("arch");
-    found = true;
-    
-    if (!arch.exists())               { found = false;
-    if (!arch.mkdir("arch"))          { found = false;
-    if (!arch.mkpath(archiveDirName)) { found = false;
-    
-    } else found = true;
-    } else found = true;
-    } else found = true;
-    
-    qDebug() << archiveDirName;
-    
-    if (!found) {
-        QMessageBox::critical(this,
-        QString(tr("Warnung")),
-        QString(tr("das Archiv konnte nicht erstellt werden")));
-        return;
-    }
+    QString tmp = checkAndCreateDataFolder("arch");
+    QDir arch(tmp);
     
     datum = QDate::currentDate();
     bool val = datum.isValid();
@@ -539,35 +643,60 @@ void MainWindow::checkAndLoadData(int mode, QString str1, QString str2)
     QString dstr = datum.toString("dd.MM.yyyy");
     QStringList fileList = arch.entryList(QDir::AllEntries);
     
-    if (fileList.indexOf(dstr) < 0) {
+    if (fileList.indexOf(dstr) < 0)
+    {
         QMessageBox::StandardButtons buttons =
         QMessageBox::Apply |
         QMessageBox::Abort |
         QMessageBox::Close ;
         
-        QMessageBox::information(this,
-        QString(tr("Hinweis")), QString(
-        tr("Es wurden keine gültigen Daten gefunden.\n") +
-        tr("Vielleicht wurde das Verzeichnis gelöscht,\n") +
-        tr("oder fehlende Benutzerrechte liegen vor.\n\n") +
-        tr("Es kann auch sein, dass Sie das Programm erst\n") +
-        tr("einrichten müssen.\n\n") +
-        tr("Im letzteren Fall, klicken Sie bitte auf 'Anwenden'")),
-        buttons);
-    
-        ui->topicPageWidget->setTabEnabled(0,true);
-        ui->topicPageWidget->setTabText(0,dstr);
+        QMessageBox msgBox;
+        msgBox.setText((tr("Hinweis")));
+        msgBox.setInformativeText(
+            tr("Es wurden keine gültigen Daten gefunden.\n") +
+            tr("Vielleicht wurde das Verzeichnis gelöscht,\n") +
+            tr("oder fehlende Benutzerrechte liegen vor.\n\n") +
+            tr("Es kann auch sein, dass Sie das Programm erst\n") +
+            tr("einrichten müssen.\n\n") +
+            tr("Im letzteren Fall, klicken Sie bitte auf 'Anwenden'"));
+        msgBox.setStandardButtons(buttons);
+        msgBox.setDefaultButton(QMessageBox::Abort);
+        
+        int result = msgBox.exec();
         
         QTimer *timer1 = new QTimer;
         timer1->setInterval(1000);
         connect(timer1, SIGNAL(timeout()), this, SLOT(timer1_update()));
         timer1->start();
+        
+        #if 0
+        // ------------------------
+        // no user activity?
+        // then close ...
+        // ------------------------
+        QThread *thread = new QThread;
+        WorkerThread *worker = new WorkerThread();
+        worker->moveToThread(thread);
+        
+        connect(worker, SIGNAL (error(QString)), this  , SLOT (errorString(QString)));
+        connect(thread, SIGNAL (started())     , worker, SLOT (process()));
+        connect(thread, SIGNAL (finished())    , worker, SLOT (deleteLater()));
+        
+        thread->start();
+        #endif
+        
+        ui->topicPageWidget->setTabEnabled(0,true);
+        ui->topicPageWidget->setTabText(0,dstr);
     }
     
     //QFile nwFile(arch.filePath());
     //saveLwItem();
 }
 
+void MainWindow::errorString(QString err)
+{
+    qDebug() << "Error:" << err;
+}
 void MainWindow::on_pushButton_8_clicked()
 {
     delete ui->listWidget->currentItem();
@@ -622,11 +751,13 @@ void MainWindow::openIndexHelp()
 
 void MainWindow::setSettingFile()
 {
-    settingFileName = QString("%1/%2").
-    arg(QApplication::applicationDirPath()).
+/*
+    settingFileName = QString("%1/%2/").
+    arg(appDirPath).
     arg(QString("settings.ini"));
     
     settings= new QSettings(settingFileName,QSettings::IniFormat);
+*/
 }
 
 // rechte box
@@ -666,6 +797,7 @@ void MainWindow::setSitesBoxData()
         s1 = settings->value("name").toString();
         s2 = settings->value("top" ).toString();
         
+        qDebug() << "lal: " << s1 << s2;
         if (cont.count() < 1) {
             cont.append(s2);
             artw = new QTreeWidgetItem();
@@ -689,7 +821,6 @@ void MainWindow::setSitesBoxData()
     }
     
     settings->endArray();
-    delete settings;
 }
 
 void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
@@ -755,6 +886,7 @@ void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
         
         QFont font;
         font.setBold(true);
+        font.setPointSize(10);
         
         QTreeWidgetItem *topw = new QTreeWidgetItem();
         QTreeWidgetItem *artw = new QTreeWidgetItem();
@@ -799,7 +931,6 @@ settings->endArray();
     
     tops.clear();
     settings->endArray();
-    delete settings;
 }
 
 void MainWindow::on_comboBoxRange_currentIndexChanged(int index)

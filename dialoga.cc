@@ -1,4 +1,8 @@
-#include "./headers.h"
+#include <QMessageBox>
+#include <QWidget>
+#include <QAbstractButton>
+
+#include "dialoga.h"
 
 extern std::function<void(int,QString,QString)> check_setting_func;
 

@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>../Dokumente/me.jpg</file>
+        <file>spenden.html</file>
+        <file>data/pics/donate.png</file>
+        <file>info.zip</file>
     </qresource>
 </RCC>

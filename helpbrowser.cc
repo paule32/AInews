@@ -1,13 +1,11 @@
-#ifndef HELPBROWSER_H
-# include "headers.h"
-#define HELPBROWSER_H
-#endif
+#include "headers.h"
+#include "helpbrowser.h"
 
 HelpBrowser::HelpBrowser(
     QWidget * parent )
     : QTextBrowser(parent)
 {
-    QString hdir = "/help";
+    QString hdir = "/data/help";
     QString path = QApplication::applicationDirPath() + hdir;
     
     QDir arch(path);

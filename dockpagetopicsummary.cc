@@ -1,3 +1,5 @@
+#include "headers.h"
+
 #include "dockpagetopicsummary.h"
 #include "helppopup.h"
 

@@ -1,0 +1,807 @@
+<h1 class="dropshadow"><div>
+Das GNU-Manifest
+</div></h1>
+<p><strong>
+Von <a href="http://www.stallman.org">Richard M. Stallman</a>
+</strong></p>
+<p><em>
+Deutsche Übersetzung:
+<a href="http://www.peter.gerwinski.de">Peter Gerwinski</a>
+</em></p><p>
+</p><p><em>
+Den offiziellen englischen Originaltext finden Sie unter
+<a href="http://www.gnu.org/gnu/manifesto.html">http://www.gnu.org/gnu/manifesto.html</a>.
+</em></p>
+<blockquote>
+<p>
+Anmerkung des Übersetzers: Dies ist eine inoffizielle Übersetzung
+des GNU-Manifests. Sie soll helfen, den Text zu verstehen und
+damit zur Verbreitung des GNU-Projekts beitragen. Der Übersetzer
+übernimmt jedoch keinerlei Garantie für die Richtigkeit der
+Übersetzung; wenn Sie in offiziellen Angelegenheiten bezug auf
+das GNU-Manifest nehmen wollen, halten Sie sich bitte an den
+englischsprachigen Originaltext.
+</p>
+<p><em>
+This is an inofficial translation of the GNU Manifesto into
+German. The translation is intended to help people to understand
+the text and to help the GNU project to spread. The translator
+does not provide any warranty for correctness of the translation;
+if you intend to refer to to GNU Manifesto in official concerns,
+please refer to the authentic English version.
+</em></p>
+<p>
+Das unten abgedruckte GNU-Manifest wurde von Richard Stallman zur
+Entstehungszeit des GNU-Projekts geschrieben, um zu Teilnahme und
+Unterstützung aufzurufen. Während der ersten Jahre wurde es
+geringfügig geändert, um neue Entwicklungen zu berücksichtigen,
+aber jetzt erscheint es uns am besten, es in der Form zu
+belassen, in der es die meisten Leute gesehen haben.
+</p>
+<p>
+Seit dieser Zeit haben wir Einiges über häufige Mißverständnisse
+gelernt, die sich durch eine andere Wortwahl hätten vermeiden
+lassen. 1993 wurden Fußnoten ergänzt, um diese Punkte zu klären.
+</p>
+<p>
+Aktuelle Informationen über verfügbare GNU-Software finden Sie
+auf den <a href="http://www.gnu.org/home.html">GNU-Webseiten</a>,
+insbesondere in der
+<a href="http://www.gnu.org/software/software.html">Software-Liste</a>.
+Wie Sie selbst beitragen können, finden Sie unter
+<a href="http://www.gnu.org/help">http://www.gnu.org/help</a>.
+</p>
+</blockquote>
+<h2>Was ist GNU? GNU ist nicht gleich Unix!</h2>
+<p>
+GNU steht für „<strong>G</strong>NU ist
+<strong>n</strong>icht gleich <strong>U</strong>nix“ und ist
+der Name eines kompletten, Unix-kompatiblen Software-Systems, das
+ich gerade schreibe, um es dann an jeden, der es brauchen kann,
+frei weiterzugeben. <a name="fn1" href="#FN1">(1)</a> Einige
+andere Freiwillige unterstützen mich. Beiträge in Gestalt von
+Zeit, Geld, Programmen und Material werden dringend benötigt.
+</p>
+<p>
+Bis jetzt haben wir einen Emacs-Texteditor mit Lisp, um
+Editorkommandos zu schreiben, einen Quelltextdebugger, einen
+<code>yacc</code>-kompatiblen Parsergenerator, einen Linker und
+etwa 35 Dienstprogramme. Ein Kommandointerpreter (<em>shell</em>)
+ist beinahe fertig. Ein neuer, portabler, optimierender C-Compiler
+hat sich selbst compiliert und könnte dieses Jahr herausgegeben
+werden. Anfänge zu einem <em>Kernel</em> existieren, aber es
+werden noch viele Funktionen benötigt, um Unix zu emulieren.
+Sobald der Kernel und der Compiler vollendet sind, wird es möglich
+sein, ein zur Programmentwicklung einsatzfähiges GNU-System
+herauszugeben. Wir werden TeX als Textsatzsystem einsetzen, aber
+auch an einem <code>nroff</code> wird gearbeitet. Auch werden wir
+das freie, portable X-Window-System verwenden. Danach werden wir
+ein portables <em>Common Lisp</em> hinzufügen, ein
+<em>Empire</em>-Spiel, ein Tabellenkalkulationsprogramm und
+hunderte anderer Dinge plus <em>on-line</em>-Dokumentation. Wir
+hoffen, schließlich alles Nützliche, was normalerweise zu einem
+Unix-System gehört, anbieten zu können – und mehr.
+</p>
+<p>
+GNU wird in der Lage sein, Unix-Programme laufen zu lassen, aber
+es wird nicht mit Unix identisch sein. Auf der Grundlage unserer
+Erfahrungen mit anderen Betriebssystemen werden wir alle
+gebräuchlichen Verbesserungen vornehmen; insbesondere sind längere
+Dateinamen geplant, Datei-Versionsnummern, ein absturzsicheres
+Dateisystem, eventuell Dateinamen-Komplettierung,
+terminalunabhängige Ausgabe und schließlich ein auf Lisp
+basierendes Window-System, durch welches mehrere Lisp-Programme
+und gewöhnliche Unix-Programme ein- und denselben Bildschirm
+miteinander teilen können. Sowohl C als auch Lisp werden als
+Systemsprogrammiersprachen verfügbar sein. Für die Kommunikation
+beabsichtigen wir, UUCP, MIT-Chaosnet sowie die
+Internet-Protokolle zu unterstützen.
+</p>
+<p>
+GNU zielt zunächst auf Maschinen der 68000/16000-Klasse mit
+virtuellem Speicher, weil es auf diesen am leichtesten lauffähig
+gemacht werden kann. Die Zusatzarbeit, es auf kleinere Maschinen
+zu portieren, überlassen wir jemandem, der es auf diesen verwenden
+will.
+</p>
+<p>
+Um fürchterliche Verwechselungen zu vermeiden, sprechen Sie bitte
+auch im Englischen das „G“ in „GNU“ mit
+aus.
+</p>
+<h2>Warum ich GNU schreiben muß</h2>
+<p>
+Ich glaube, daß es das Gebot der Nächstenliebe verlangt, daß ich
+ein Programm, das mir gefällt, mit anderen teile, denen es
+ebenfalls gefällt. Software-Anbieter hingegen wollen die Anwender
+isolieren und beherrschen, wobei sie jeden Anwender dazu
+verpflichten, nicht mit anderen zu teilen. Ich weigere mich, die
+Solidarität mit anderen Anwendern in dieser Weise zu brechen. Ich
+kann nicht mit gutem Gewissen einen Nichtoffenbarungsvertrag oder
+einen Software-Lizenzvertrag unterzeichnen.
+</p>
+<p>
+Damit ich ehrlich bleiben und trotzdem weiterhin Computer benutzen
+kann, habe ich mich entschlossen, eine genügend große Sammlung von
+freier Software zusammenzustellen, so daß ich in der Lage sein
+werde, ohne jegliche nicht-freie Software auszukommen. Ich habe
+meinen Beruf im <em>AI lab</em> aufgegeben, um dem <em>MIT</em>
+keinen rechtlichen Vorwand zu bieten, mich daran zu hindern, GNU
+weiterzugeben.
+</p>
+<h2>Warum GNU Unix-kompatibel sein wird</h2>
+<p>
+Unix ist nicht mein ideales Betriebssystem, aber es ist nicht
+übel. Die wesentlichen Eigenschaften von Unix scheinen gut zu
+sein, und ich denke, daß ich fehlendes ergänzen kann, ohne die
+guten Eigenschaften zu verderben. Außerdem wird ein
+Unix-kompatibles System für viele Menschen eher annehmbar sein.
+</p>
+<h2>Wie GNU erhältlich sein wird</h2>
+<p>
+GNU ist nicht in der <em>public domain</em>. Zwar wird jedem
+gestattet sein, GNU zu modifizieren und weiterzugeben, aber keinem
+Distributor wird es erlaubt sein, die Weiterverbreitung von GNU
+einzuschränken; sprich: proprietäre Modifikationen werden nicht
+erlaubt sein. Ich möchte sicherstellen, daß alle Versionen von GNU
+frei bleiben.
+</p>
+<h2>Warum viele andere Programmierer mithelfen wollen</h2>
+<p>
+Ich habe viele andere Programmierer gefunden, die vom GNU-Projekt
+begeistert sind und ihre Hilfe anbieten.
+</p>
+<p>
+Viele Programmierer sind mit der Kommerzialisierung von
+Systemsoftware unzufrieden. Es mag ihnen die Möglichkeit geben,
+mehr Geld zu machen, aber es zwingt sie gleichzeitig, andere
+Programmierer im allgemeinen als Gegner anstatt als Kameraden zu
+betrachten. Der fundamentale Akt der Freundschaft zwischen
+Programmierern ist das Teilen von Programmen; derzeitige
+Vermarktungspraktiken verbieten Programmierern im wesentlichen,
+sich gegenseitig als Freunde zu behandeln. Der Käufer von Software
+hat die Wahl zwischen Freundschaft und Gesetzestreue. Naturgemäß
+entscheiden viele, daß Freundschaft für sie wichtiger ist, aber
+diejenigen, welche an das Gesetz glauben, haben eine schwere
+Entscheidung. Sie werden zynisch und betrachten Programmierung nur
+noch als eine Möglichkeit, Geld zu machen.
+</p>
+<p>
+Wenn wir an und mit GNU anstelle von proprietären Programmen
+arbeiten, können wir gleichzeitig zu jedem gastfreundlich sein und
+dem Gesetz genügen. Außerdem dient GNU uns als inspirierendes
+Beispiel und als Banner, andere zu sammeln, um sich uns beim
+Teilen anzuschließen. Dies kann uns ein Gefühl der Harmonie
+bringen, das beim Gebrauch nicht-freier Software unmöglich wäre.
+Für jeden zweiten Programmierer, mit dem ich gesprochen habe, ist
+dies ein wichtiges Glück, das durch Geld nicht ersetzt werden
+kann.
+</p>
+<h2>Wie Sie selbst beitragen können</h2>
+<p>
+Ich bitte Computerhersteller um Spenden in Gestalt von Maschinen
+und Geld. Ich bitte Einzelpersonen um Spenden in Gestalt von
+Programmen und Arbeit.
+</p>
+<p>
+Wenn Sie uns eine Maschine zur Verfügung stellen, können Sie damit
+rechnen, daß GNU relativ früh darauf laufen wird. Die Maschinen
+sollten komplette, gebrauchsfertige Systeme sein, in einer Wohnung
+benutzt werden können und keine außergewöhnliche Kühlung oder
+Energieversorgung benötigen.
+</p>
+<p>
+Ich habe sehr viele Programmierer gefunden, die bereit sind, einen
+Teil ihrer Arbeitszeit GNU zu widmen. Für die meisten Projekte
+würde derartig verteilte Teilzeitarbeit schwer zu koordinieren
+sein; die voneinander unabhängig geschriebenen Teile würden nicht
+zusammenarbeiten. Für die spezielle Aufgabe jedoch, Unix zu
+ersetzen, existiert dieses Problem nicht. Ein komplettes
+Unix-System enthält hunderte von Dienstprogrammen, von denen jedes
+separat dokumentiert ist. Die meisten Schnittstellen sind durch
+Unix-Kompatibilität festgelegt. Wenn jeder Beteiligte einen
+kompatiblen Ersatz für ein Unix-Dienstprogramm schreibt und dafür
+sorgt, daß es an der Stelle der Originalkomponente richtig
+arbeitet, dann werden diese Dienstprogramme auch richtig arbeiten,
+wenn man sie zusammensetzt. Selbst wenn wir Murphy erlauben, ein
+paar unerwartete Probleme zu produzieren, sollte das
+Zusammensetzen dieser Komponenten eine durchführbare Aufgabe sein.
+(Der Kernel wird eine engere Zusammenarbeit erfordern, daher wird
+eine kleine Gruppe daran arbeiten.)
+</p>
+<p>
+Sollte ich Geldspenden erhalten, werden mich diese in die Lage
+versetzen, ein paar Leute in Voll- oder Teilzeitarbeit
+einzustellen. Die Gehälter werden für den Standard von
+Programmierern nicht hoch sein, aber ich suche Leute, für die das
+Bilden von Gemeinschaftsgeist wichtiger ist als Geld zu scheffeln.
+Ich sehe dies als einen Weg an, es ausgewählten Leuten zu
+ermöglichen, ihre gesamte Energie in ihre Arbeit an GNU zu
+investieren, indem ich sie von der Notwendigkeit freimache, ihren
+Lebensunterhalt auf andere Weise zu verdienen.
+</p>
+<h2>Warum dies allen Computerbenutzern nützen wird</h2>
+<p>
+Sobald GNU geschrieben sein wird, wird jeder in der Lage sein,
+gute Systemsoftware so frei wie Luft zu bekommen. <a name="fn2" href="#FN2">(2)</a>
+</p>
+<p>
+Dies bedeutet mehr, als nur jedem den Preis für eine Unix-Lizenz
+zu erspraren. Es bedeutet, daß viele überflüssige Anstrengungen,
+Systemsoftware jedesmal neu zu programmieren, vermieden werden
+können. Dieselben Anstrengungen können stattdessen eingesetzt
+werden, uns auf dem Gebiet weiterzubringen.
+</p>
+<p>
+Der komplette Quelltext des Systems wird für jeden verfügbar sein
+mit dem Ergebnis, daß ein Benutzer, der Veränderungen in dem
+System benötigt, immer die Freiheit haben wird, diese selbst
+vorzunehmen oder einen Programmierer oder eine Firma damit zu
+beauftragen. Die Benutzer werden nicht länger von der Gunst eines
+einzigen Programmierers oder einer einzigen Firma abhängig sein,
+welche den Quelltext besitzt und daher als einzige Veränderungen
+vornehmen kann.
+</p>
+<p>
+Schulen können ein besseres pädagogisches Umfeld bieten, wenn sie
+die Schüler dazu anhalten, den Code des Betriebssystems zu
+studieren und zu verbessern. Das <em>Harvard's computer lab</em>
+verlangte, daß kein Programm im System installiert werden durfte,
+dessen Quelltext nicht öffentlich zugänglich war – und
+hielten dies aufrecht, indem bestimmte Programme tatsächlich nicht
+installiert wurden. Dies hat mich sehr inspiriert.
+</p>
+<p>
+Und schließlich wird auch der Verwaltungsaufwand vermieden, zu
+überlegen, wem die Systemsoftware gehört und was man damit tun
+darf und was nicht.
+</p>
+<p>
+Wenn Menschen für das Benutzen eines Programms einschließlich des
+Anfertigens von Kopien zahlen müssen, entstehen fürchterliche
+Kosten für die Gesellschaft durch den schwerfälligen Mechanismus,
+der notwendig ist, um herauszufinden für wie viel (d.h. für welche
+Programme) eine Person zahlen muß, und nur ein Polizeistaat kann
+jeden dazu zwingen, diese Verträge einzuhalten. Stellen Sie sich
+eine Raumstation vor, in der die Luft zu hohen Kosten hergestellt
+werden muß: Es mag fair sein, Atemluft pro verbrauchten Liter zu
+berechnen, aber das Tragen von Gasmasken mit Meßeinrichtungen
+– Tag und Nacht – ist intolerabel, selbst wenn der
+Luftpreis für jeden erschwinglich ist. Und allgegenwärtige
+Fernsehkameras, die überwachen, ob jemand die Maske abnimmt, sind
+abscheulich. Es ist besser, die Luftanlage durch eine Kopfsteuer
+zu finanzieren und die Masken wegzuwerfen.
+</p>
+<p>
+Das ganze oder teilweise Kopieren eines Programms ist für einen
+Programmierer so natürlich wie Atmen – und so produktiv. Es
+sollte genauso frei sein.
+</p>
+<h2>Einige leicht zu entkräftende Einwände gegen die Ziele von GNU</h2>
+<blockquote>
+<p>
+„Niemand wird es benutzen, wenn es frei ist, weil dies
+bedeutet, daß Sie sich nicht auf Wartung verlassen können.“
+</p>
+<p>
+„Sie müssen etwas für das Programm berechnen, um Service
+anbieten zu können.“
+</p>
+</blockquote>
+<p>
+Wenn die Menschen lieber für GNU mit Service bezahlen, als GNU
+ohne Service frei zu erhalten, sollte eine Firma, die speziell
+diesen Service für Leute anbietet, die GNU frei erhalten haben,
+rentabel sein. <a name="fn3" href="#FN3">(3)</a>
+</p>
+<p>
+Wir müssen zwischen Wartung in Gestalt von echter
+Programmierarbeit und Benutzerhilfe unterscheiden. Ersteres ist
+etwas, das Sie von einem Software-Händler nicht erwarten können:
+Wenn Ihr Problem nicht von genügend Leuten geteilt wird, wird der
+Händler Sie zum Teufel schicken.
+</p>
+<p>
+Wenn Ihr Unternehmen darauf angewiesen ist, sich auf Wartung zu
+verlassen, ist der einzig gangbare Weg, alle nötigen Quelltexte
+und Werkzeuge vorliegen zu haben, denn dann können Sie jede
+verfügbare Person einstellen, Ihr Problem zu lösen, und sind nicht
+von der Gunst einer speziellen Person abhängig. Mit Unix ist dies
+infolge des hohen Preises der Quelltexte für die meisten
+Unternehmen unerschwinglich; mit GNU wird dies leicht sein. Es
+kann immer noch sein, daß keine kompetente Person zur Verfügung
+steht, aber dies liegt dann nicht an den Vertriebsbedingungen. GNU
+löst nicht alle Probleme der Welt, sondern nur bestimmte.
+</p>
+<p>
+Gleichzeitig sind Anwender ohne Computerwissen auf Hilfe
+angewiesen: Dinge für sie erledigen, die sie leicht selbst tun
+könnten, aber nicht wissen, wie.
+</p>
+<p>
+Derartige Dienste könnten von Firmen angeboten werden, die gerade
+solche Benutzerhilfen und Reparaturservice anbieten. Wenn es
+stimmt, daß Benutzer es vorziehen, für ein Produkt mit Service zu
+bezahlen, werden sie auch bereit sein, den Service zu bezahlen,
+während sie das Produkt frei erhalten haben. Die
+Serviceunternehmen werden in Qualität und Preis miteinander
+konkurrieren; die Benutzer werden nicht an ein spezielles gebunden
+sein. Gleichzeitig können diejenigen von uns, die den Service
+nicht benötigen, das Programm benutzen, ohne für den Service
+bezahlen zu müssen.
+</p>
+<blockquote>
+<p>
+„Ohne Werbung können Sie nicht viele Leute erreichen, und
+Sie müssen etwas für das Programm berechnen, um dies zu
+ermöglichen.“
+</p>
+<p>
+„Es ist nutzlos, für etwas zu werben, was man umsonst
+bekommen kann.“
+</p>
+</blockquote>
+<p>
+Es gibt viele Formen kostenloser oder kostengünstiger Werbung, die
+dazu dienen kann, viele Computerbenutzer über so etwas wie GNU zu
+informieren. Es mag stimmen, daß man mehr Benutzer von
+Microcomputern durch Werbung erreichen kann; wenn dies so ist,
+sollte ein Unternehmen, das etwas für den Service des Kopierens
+und Verteilens von GNU berechnet, erfolgreich genug sein, um sich
+Werbung und mehr leisten zu können. Auf diese Weise zahlen auch
+nur diejenigen Benutzer für die Werbung, die von ihr profitieren.
+</p>
+<p>
+Wenn andererseits viele Leute GNU von ihren Freunden erhalten und
+solche Unternehmen keinen Erfolg haben, zeigt dies, daß Werbung in
+Wirklichkeit gar nicht nötig war, um GNU zu verbreiten. Warum
+wollen die Vertreter der freien Marktwirtschaft nicht den freien
+Markt darüber entscheiden lassen? <a name="fn4" href="#FN4">(4)</a>
+</p>
+<blockquote>
+<p>
+„Mein Unternehmen benötigt ein proprietäres Betriebssystem,
+um einen Wettbewerbsvorteil zu bekommen.“
+</p>
+</blockquote>
+<p>
+GNU wird Betriebssystem-Software aus dem Bereich des Wettbewerbs
+entfernen. Sie werden keinen Vorteil auf diesem Gebiet erzielen
+können, aber umgekehrt wird auch Ihre Konkurrenz Sie nicht
+übervorteilen können. Sie werden auf anderen Gebieten in
+Wettbewerb treten, während Sie auf diesem Gebiet voneinander
+profitieren werden. Wenn Ihr Unternehmen vom Verkauf eines
+Betriebssystems lebt, werden Sie GNU nicht mögen, aber das ist Ihr
+Problem. Wenn Ihr Unternehmen anders ist, kann GNU Sie davor
+bewahren, in das teure Geschäft gedrängt zu werden,
+Betriebssysteme zu verkaufen.
+</p>
+<p>
+Ich würde es gerne sehen, wenn viele Hersteller und Benutzer die
+Entwicklung von GNU durch Spenden unterstützen würden, um die
+Kosten für jeden einzelnen zu senken. <a name="fn5" href="#FN5">(5)</a>
+</p>
+<blockquote>
+<p>
+„Verdienen nicht die Programmierer eine Belohnung für ihre
+Kreativität?“
+</p>
+</blockquote>
+<p>
+Wenn irgendetwas eine Belohnung verdient, dann sind es soziale
+Beiträge. Kreativität kann ein sozialer Beitrag sein, aber nur,
+wenn die Gesellschaft die Freiheit hat, die Resultate zu nutzen.
+Wenn Programmierer eine Belohnung für das Schreiben innovativer
+Programme verdienen, müßten sie aus demselben Grunde bestraft
+werden, wenn sie die Nutzung dieser Programme einschränken.
+</p>
+<blockquote>
+<p>
+„Sollte ein Programmierer nicht eine Belohnung für seine
+Kreativität verlangen dürfen?“
+</p>
+</blockquote>
+<p>
+Es ist nichts Falsches darin, Bezahlung für Arbeit zu verlangen
+oder sein Einkommen maximieren zu wollen, solange man nicht
+destruktiv wird. Die zur Zeit auf diesem Gebiet gebräuchlichen
+Mittel basieren auf einer Form von Zerstörung.
+</p>
+<p>
+Geld von Benutzern zu kassieren, indem man den Gebrauch eines
+Programms einschränkt, ist destruktiv, weil die Einschränkungen
+die Häufigkeit und die verschiedenen Weisen begrenzen, in denen
+das Programm benutzt werden könnte. Dies begrenzt den Reichtum,
+der aus dem Programm für die Menschheit entsteht. Die schädlichen
+Auswirkungen einer bewußten Beschränkung sind eine bewußte Form
+von Zerstörung.
+</p>
+<p>
+Der Grund, weshalb ein guter Bürger derart destruktive Mittel
+nicht anwendet, um reich zu werden, ist, daß, wenn dies jeder
+täte, wir alle durch die wechselseitige Zerstörung ärmer würden.
+Dies ist Kantsche Ethik – oder das Gebot der Nächstenliebe. Die
+Konsequenzen, die daraus entstünden, daß ein jeder Information
+horten würde, gefallen mir nicht, daher sehe ich mich gezwungen,
+es für falsch zu befinden, wenn sich einer so verhält.
+Insbesondere begründet der Wunsch, für Kreativität belohnt zu
+werden, es nicht, die gesamte Welt all dieser Kreativität oder von
+Teilen davon zu berauben.
+</p>
+<blockquote>
+<p>
+„Werden die Programmierer nicht verhungern?“
+</p>
+</blockquote>
+<p>
+Ich könnte antworten, daß niemand gezwungen ist, ein Programmierer
+zu sein. Die meisten von uns könnten nicht davon leben, auf der
+Straße zu stehen und Possen zu reißen, aber wir sind deswegen noch
+lange nicht dazu verdammt, auf der Straße zu stehen, Possen zu
+reißen und zu verhungern – wir machen etwas anderes.
+</p>
+<p>
+Aber dies ist die falsche Antwort, weil sie die implizite Annahme
+des Fragestellers akzeptiert, daß nämlich Programmierer keinen
+Pfennig erhalten würden, wenn es keinen Besitz von Software gibt.
+Es wird angenommen, daß es um „alles oder nichts“
+geht.
+</p>
+<p>
+Der wirkliche Grund, weshalb Programmierer nicht verhungern
+werden, ist, daß es für sie immer noch möglich sein wird, Geld für
+Programmierung zu erhalten, nur eben nicht so viel, wie dies im
+Moment der Fall ist.
+</p>
+<p>
+Eingeschränktes Kopieren ist nicht die einzige geschäftliche Basis
+in Sachen Software. Es ist die üblichste Basis, weil sie am
+meisten Geld einbringt. Wäre diese Basis verboten oder würde sie
+von den Kunden abgelehnt, würde sich das Software-Geschäft auf
+andere organisatorische Grundlagen begeben, die zur Zeit weniger
+häufig verwendet werden. Es gibt immer viele Wege, Geschäfte zu
+organisieren.
+</p>
+<p>
+Sicherlich wird das Programmieren auf dieser neuen Basis nicht so
+lukrativ sein, wie es jetzt ist, aber dies ist kein Argument gegen
+den Wechsel. Man betrachtet es im allgemeinen nicht als ungerecht,
+daß Verkäufer die Gehälter bekommen, die sie bekommen. Würden
+Programmierer die gleichen Gehälter beziehen, wäre dies ebenfalls
+nicht ungerecht. (In der Praxis werden sie auch weiterhin deutlich
+mehr beziehen.)
+</p>
+<blockquote>
+<p>
+„Haben Menschen nicht das Recht, zu kontrollieren, wie ihre
+Ideen verwendet werden?“
+</p>
+</blockquote>
+<p>
+„Kontrolle über den Gebrauch von Ideen“ konstituiert
+in Wirklichkeit Kontrolle über das Leben anderer Menschen, und sie
+wird normalerweise eingesetzt, um den Menschen das Leben schwerer
+zu machen.
+</p>
+<p>
+Leute, die das Thema geistigen Eigentums sorgfältig studiert haben
+(z.B. Anwälte) sagen, daß es kein intrinsisches Recht auf
+intellektuelles Eigentum gibt. Die von der Regierung anerkannten
+Arten angenommenen intellektuellen Eigentums wurden durch
+spezielle Gesetze für spezielle Zwecke geschaffen.
+</p>
+<p>
+Beispielsweise wurde das Patentsystem etabliert, um Erfinder zu
+ermutigen, die Details ihrer Erfindungen zu offenbaren. Der Sinn
+war eher der Gesellschaft zu helfen als dem Erfinder. Zu jener
+Zeit war die Lebensdauer von 17 Jahren für ein Patent klein
+verglichen mit der Geschwindigkeit des Fortschritts. Weil Patente
+nur für Hersteller ein Thema sind, für welche die Kosten und Mühen
+einer Lizenz klein verglichen mit den Produktionskosten sind,
+schaden Patente meistens nicht viel. Die meisten Einzelpersonen,
+die patentierte Produkte benutzen, werden dadurch nicht
+behindert.
+</p>
+<p>
+Die Idee des Urheberrechts existierte früher nicht, als Autoren
+häufig andere Autoren in nicht-fiktionalen Werken kopierten. Diese
+Praxis war nützlich, und nur auf diesem Wege sind die Werke vieler
+Autoren wenigstens teilweise erhalten geblieben. Das System des
+Urheberrechts wurde ausdrücklich dafür entwickelt, Autorenschaft
+zu ermutigen. Auf dem Gebiet, für das es erfunden wurde –
+Bücher, die nur auf einer Druckerpresse auf ökonomische Weise
+vervielfältigt werden konnten – schadete es wenig, und die
+meisten Leser wurden dadurch nicht behindert.
+</p>
+<p>
+Alle intellektuellen Eigentumsrechte wurden von der Gesellschaft
+lizensiert, weil man – richtig oder falsch – glaubte,
+daß die gesamte Gesellschaft von der Einführung dieser Rechte
+profitieren würde. In einer speziellen Situation jedoch müssen wir
+uns fragen, ob wir wirklich besser damit fahren, solche Rechte zu
+lizensieren. Welche Art von Handlungen erlauben wir den Personen?
+</p>
+<p>
+Der Fall von Computerprogrammen heute ist sehr verschieden von dem
+von Büchern vor hundert Jahren. Die Tatsache, daß der einfachste
+Weg, ein Programm zu kopieren, von Nachbar zu Nachbar geht, die
+Tatsache, daß zu einem Programm sowohl Quelltext als auch
+Objectcode gehören, die verschieden sind, und die Tatsache, daß
+ein Programm benutzt und nicht gelesen und genossen wird, schaffen
+zusammen eine Situtation, in der eine Person, die ein Urheberrecht
+einfordert, der gesamten Gesellschaft sowohl materiellen als auch
+spirituellen Schaden zufügt – eine Situtation, in der eine
+Person kein Urheberrecht einfordern sollte, unabhängig davon, ob
+die Gesetze es ihr erlauben.
+</p>
+<blockquote>
+<p>
+„Im Wettbewerb werden Dinge besser ausgeführt.“
+</p>
+</blockquote>
+<p>
+Das Musterbeispiel eines Wettbewerbs ist ein Wettrennen: Indem wir
+den Gewinner belohnen, ermutigen wir jeden Teilnehmer, schneller
+zu laufen. Wenn der Kapitalismus tatsächlich auf diese Weise
+funktioniert, ist es gut, aber seine Befürworter haben Unrecht mit
+der Annahme, daß es immer so funktioniert. Wenn die Läufer
+vergessen, weshalb der Preis ausgesetzt wurde und unbedingt
+gewinnen wollen – egal wie –, entdecken sie vielleicht
+andere Strategien, zum Beispiel, andere Läufer anzugreifen. Wenn
+die Läufer in einen Faustkampf geraten, werden alle erst spät
+durchs Ziel gehen.
+</p>
+<p>
+Proprietäre und geheime Software sind das moralische Äquivalent
+von Rennläufern in einem Faustkampf. Es ist traurig, daß sich der
+einzige vorhandene Schiedsrichter nicht um Faustkämpfe sorgt und
+sie lediglich reguliert („Pro zehn gelaufene Meter dürft ihr
+einen Schuß abfeuern“). Er sollte sie stattdessen
+auseinanderbringen und Läufer bereits für den Versuch eines
+Angriffs bestrafen.
+</p>
+<blockquote>
+<p>
+„Wird ohne finanziellen Ansporn nicht jeder aufhören zu
+programmieren?“
+</p>
+</blockquote>
+<p>
+Tatsächlich werden viele Menschen absolut ohne jeden finanziellen
+Ansporn programmieren. Das Programmieren übt eine unwiderstehliche
+Faszination auf manche Leute aus – normalerweise diejenigen
+Leute, die darin am besten sind. Es gibt keinen Mangel an
+Berufsmusikern, die bei ihrem Beruf bleiben, obwohl sie keinerlei
+Hoffnung haben, damit ihren Lebensunterhalt bestreiten zu
+können.
+</p>
+<p>
+Aber in Wirklichkeit ist diese Frage, obwohl sie häufig gestellt
+wird, der Situation nicht angemessen. Die Bezahlung für
+Programmierer wird nicht verschwinden, sondern nur weniger werden.
+Die richtige Frage ist daher: Wird irgendjemand bei reduziertem
+finanziellen Ansporn programmieren? Meine Erfahrung zeigt, daß
+jemand es tun wird.
+</p>
+<p>
+Vor über zehn Jahren haben einige der besten Programmierer der
+Welt im <em>Artificial Intelligence Lab</em> für weit weniger Geld
+gearbeitet, als sie anderswo hätten verdienen können. Sie
+erhielten nicht-finanzielle Belohnungen in vielerlei Art, zum
+Beispiel Berühmtheit und Dank. Außerdem ist die Kreativität selbst
+eine Freude, eine Belohnung für sich.
+</p>
+<p>
+Dann geschah es, daß die meisten dieser Programmierer
+verschwanden, als sie eine Chance bekamen, dieselbe interessante
+Arbeit für viel Geld zu tun.
+</p>
+<p>
+Die Tatsachen zeigen, daß Menschen aus anderen Gründen als
+Bereicherung programmieren werden, aber wenn man ihnen eine
+Möglichkeit gibt, außerdem noch viel Geld zu scheffeln, geschieht
+es, daß sie dieses Geld erwarten und verlangen.
+Niedriglohn-Organisationen machen sich schlecht neben
+Höchstlohn-Organisationen; dies entfällt, wenn die
+Höchstlohn-Organisationen verboten sind.
+</p>
+<blockquote>
+<p>
+„Wir sind auf die Programmierer angewiesen. Wenn die
+verlangen, daß wir aufhören, unseren Nachbarn zu helfen, müssen
+wir nachgeben.“
+</p>
+</blockquote>
+<p>
+Sie können niemals so verzweifelt sein, daß Sie derartigen
+Forderungen nachgeben müssen. Vergessen Sie nicht: Millionen für
+die Verteidigung – keinen Pfennig für Tribut!
+</p>
+<blockquote>
+<p>
+„Programmierer müssen von irgendetwas leben.“
+</p>
+</blockquote>
+<p>
+Kurzfristig existiert dieses Problem. Es gibt aber viele Wege, wie
+Programmierer ihren Lebensunterhalt bestreiten können, ohne das
+Recht zu verkaufen, eine Programm zu benutzen. Der derzeitige Weg
+ist üblich, weil er Programmierern und Geschäftsleuten das meiste
+Geld einbringt und nicht, weil es der einzige Weg ist, seinen
+Lebensunterhalt zu verdienen. Es ist leicht, andere Wege zu
+finden, wenn man sie sucht; einige Beispiele folgen.
+</p>
+<p>
+Ein Computerhersteller, der einen neuen Computer einführt, zahlt
+für die Portierung des Betriebssystems auf die neue Hardware.
+</p>
+<p>
+Programmierer können in der Schulung, Benutzerhilfe und Wartung
+unterkommen.
+</p>
+<p>
+Leute mit neuen Ideen können Programme als FreeWare verteilen und
+zufriedene Benutzer um Spenden bitten oder Benutzerhilfen
+anbieten. Ich bin einigen Leuten begegnet, die bereits erfolgreich
+in dieser Weise arbeiten.
+</p>
+<p>
+Benutzer mit ähnlichen Bedürfnissen können
+Interessensgemeinschaften bilden und Beiträge zahlen. Die Gruppe
+würde dann Programmierfirmen damit beauftragen, Programme zu
+schreiben, die die Mitglieder gerne benutzen würden.
+</p>
+<p>
+Alle Arten von Weiterentwicklung könnten durch eine
+Software-Steuer finanziert werden:
+</p>
+<blockquote>
+<p>
+Stellen wir uns vor, jeder, der einen Computer kauft, muß
+<em>x</em> Prozent des Preises an Software-Steuer entrichten. Die
+Regierung gibt dieses Geld einer Agentur wie der NSF, um es für
+Software-Entwicklung einzusetzen.
+</p>
+<p>
+Wenn allerdings der Computerkäufer selbst für
+Software-Entwicklung spendet, wird die Spende mit der
+Software-Steuer verrechnet. Er kann für das Projekt seiner Wahl
+spenden – häufig in der Hoffnung ausgewählt, das Ergebnis
+benutzen zu können. Er kann beliebig hohe Spenden anrechnen
+lassen bis hin zum Gesamtvolumen der zu zahlenden Steuer.
+</p>
+<p>
+Der Steuersatz könnte durch die Steuerzahler selbst durch Wahl
+festgelegt werden, gewichtet gemäß der Menge der zu zahlenden
+Steuer.
+</p>
+<p>
+Die Konsequenzen:
+</p>
+<ul>
+<li>
+Die Gemeinschaft der Computerbenutzer unterstützt die
+Software-Entwicklung.
+</li>
+<li>
+Die Gemeinschaft entscheidet, wieviel Unterstützung benötigt
+wird.
+</li>
+<li>
+Benutzer, denen es darauf ankommt, an welchen Projekten sie sich
+beteiligen, können dies selbst entscheiden.
+</li>
+</ul>
+</blockquote>
+<p>
+Auf lange Sicht ist das Freigeben von Programmen ein Schritt in
+Richtung einer Welt ohne Mangel, in der niemand hart arbeiten muß,
+um sein Leben zu bestreiten. Die Menschen werden frei sein, sich
+Aktivitäten zu widmen, die Freude machen, zum Beispiel
+Programmieren, nachdem sie zehn Stunden pro Woche mit notwendigen
+Aufgaben wie Verwaltung, Familienberatung, Reparatur von Robotern
+und der Beobachtung von Asteroiden verbracht haben. Es wird keine
+Notwendigkeit geben, von Programmierung zu leben.
+</p>
+<p>
+Wir haben bereits die Menge an Arbeit, welche die Gesellschaft für
+ihre Produktivität aufbringen muß, gewaltig reduzieren können,
+aber nur ein kleiner Teil davon übertrug sich in mehr Freizeit für
+Arbeiter, weil jede produktive Aktivität zwangsläufig von viel
+unproduktiver Aktivität begleitet wird. Die Hauptursache hierfür
+ist Bürokratie und gegenseitiges Bekämpfen, ohne dabei voran zu
+kommen, anstelle von Wettbewerb. Freie Software wird diese
+Auswüchse auf dem Gebiet der Software-Entwicklung in großartiger
+Weise reduzieren. Wir müssen so handeln, um technische
+Fortschritte in Sachen Produktivität zu erzielen, die sich in
+weniger Arbeit für uns alle äußern werden.
+</p>
+<hr>
+<h3>Fußnoten:</h3>
+<dl>
+<dt>
+<a name="FN1" href="#fn1">(1)</a>
+</dt>
+<dd>
+Diese Wortwahl war ein wenig sorglos. Die Absicht war, daß
+niemand für die <em>Erlaubnis</em> zahlen muß, das GNU-System zu
+benutzen. Diees geht jedoch nicht aus der Formulierung hervor,
+und man interpretiert dies häufig so, daß Kopien von GNU stets
+gegen kein oder höchstens geringes Entgelt verteilt werden
+sollen. Dies war niemals die Absicht; weiter unten erwähnt das
+Manifest die Möglichkeit für Firmen, GNU gegen Bezahlung zu
+verteilen. Später habe ich es gelernt, sorgfältig zwischen
+„frei“ im Sinne von „Freiheit“ und
+„frei“ im Sinne von „Preis“ zu
+unterscheiden. Freie Software ist Software, deren Benutzer die
+Freiheit haben, sie weiterzugeben und zu verändern. Manche werden
+ihre Kopien gratis erhalten, während andere dafür bezahlen werden
+– und wenn diese Geldsumme dazu beiträgt, die Software
+weiter zu verbessern, um so besser. Wichtig ist, daß jeder, der
+eine Kopie hat, auch die Freiheit hat, beim Gebrauch dieser Kopie
+mit anderen zu kooperieren.
+</dd>
+<dt>
+<a name="FN2" href="#fn2">(2)</a>
+</dt>
+<dd>
+Dies ist eine weitere Stelle, an der ich versämut habe,
+sorgfältig zwischen den beiden verschiedenen Bedeutungen von
+„frei“ zu unterscheiden. So, wie der Satz geschrieben
+ist, ist er nicht falsch – Sie können Kopien von
+GNU-Software kostenlos von Ihren Freunden oder über das Netz
+erhalten –, aber er suggeriert die falsche Idee.
+</dd>
+<dt>
+<a name="FN3" href="#fn3">(3)</a>
+</dt>
+<dd>
+Inzwischen gibt es mehrere solche Firmen.
+</dd>
+<dt>
+<a name="FN4" href="#fn4">(4)</a>
+</dt>
+<dd>
+Die <em>Free Software Foundation</em> bezieht den größten Teil
+ihres Kapitals von einem solchen Verteilungsservice, obwohl sie
+eher eine caritative Einrichtung als eine Firma ist. Wenn sich
+<em>niemand</em> dafür entscheidet, seine Kopien von der FSF zu
+beziehen, wird diese ihre Arbeit nicht machen können. Dies
+bedeutet nicht, daß proprietäre Einschränkungen gemacht werden
+sollten, um jeden Benutzer zum Bezahlen zu zwingen; wenn ein
+kleiner Bruchteil aller Benutzer seine Kopien von der FSF
+bezieht, genügt dies, die FSF flüssig zu halten. Daher bitten wir
+Benutzer in dieser Weise um ihre Unterstützung. Haben Sie Ihren
+Teil bereits geleistet?
+</dd>
+<dt>
+<a name="FN5" href="#fn5">(5)</a>
+</dt>
+<dd>
+Eine Gruppe von Computerunternehmen hat vor kurzem Kapital
+angesammelt, um die Wartung des GNU-C-Compilers zu unterstützen.
+</dd>
+</dl>
+<p align="center">* * * </p>
+<p>
+Copyright-Notiz des englischsprachigen Orignals:<br>
+Copyright © 1985, 1993, 2003, 2005 Free Software Foundation,
+Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+MA 02110-1301, USA<br>
+<em>
+Permission is granted to anyone to make or distribute verbatim copies
+of this document, in any medium, provided that the copyright notice and
+permission notice are preserved, and that the distributor grants the
+recipient permission for further redistribution as permitted by this
+notice.<br>
+Modified versions may not be made.<br>
+</em>
+Übersetzung:<br>
+Es ist jedem gestattet, unveränderte Kopien dieses Dokuments in
+beliebigen Medien anzufertigen oder weiterzugeben, vorausgesetzt,
+daß diese Copyright-Notiz und diese Erlaubnis erhalten bleiben und
+daß der Distributor den Empfängern das Recht zur Weiterverbreitung
+im Sinne dieser Erlaubnis gewährt.<br>
+Veränderte Versionen dürfen nicht erstellt werden.
+</p>
+

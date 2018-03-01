@@ -1,4 +1,5 @@
 #ifndef HELPBROWSER_H
+#define HELPBROWSER_H
 
 #include <QObject>
 #include <QString>
@@ -16,5 +17,4 @@ public:
     QHelpEngine * helpEngine;
 };
 
-#define HELPBROWSER_H
 #endif // HELPBROWSER_H

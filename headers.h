@@ -1,4 +1,5 @@
 #ifndef HEADERS_H
+#define HEADERS_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,24 +10,25 @@
 
 #include <functional>
 #include <iostream>
-using namespace std;
 
-#ifndef QDEBUG_H
-# include <QDebug>
-#endif
+using namespace std;
 
 #include <QObject>
 #include <QApplication>
 #include <QMessageBox>
+#include <QAbstractButton>
 #include <QDir>
 #include <QString>
 #include <QLatin1String>
 #include <QtCore/QLibraryInfo>
 
+#include <QIODevice>
+#include <QTextStream>
+
 #include <QDialog>
 #include <QWidget>
 #include <QAbstractButton>
-#include <QMessageBox>
+#include <QSplitter>
 
 #include <QMessageBox>
 #include <QStringList>
@@ -36,6 +38,7 @@ using namespace std;
 #include <QSettings>
 #include <QNetworkReply>
 #include <QFileDialog>
+#include <QImageReader>
 #include <QDomDocument>
 #include <QDomElement>
 
@@ -56,25 +59,4 @@ using namespace std;
 #include <QtWidgets/QTextBrowser>
 #include <QtHelp/QHelpEngineCore>
 
-#ifndef UI_MAINWINDOW_H
-# include "./ui_mainwindow.h"
-#endif
-
-#ifndef UI_DIALOG_H
-# include "./ui_dialoga.h"
-#endif
-
-#ifndef MAINWINDOW_H
-# include "./mainwindow.h"
-#endif
-
-#ifndef ITEMDIALOGA_H
-# include "./dialoga.h"
-#endif
-
-#ifndef HELPBROWSER_H
-# include "helpbrowser.h"
-#endif
-
-#define HEADERS_H
 #endif // HEADERS_H

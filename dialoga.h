@@ -1,9 +1,12 @@
 #ifndef ITEMDIALOGA_H
+#define ITEMDIALOGA_H
 
 #include <QObject>
 #include <QWidget>
 #include <QDialog>
 #include <QAbstractButton>
+
+#include "ui_dialoga.h"
 
 namespace Ui {
 class ItemDialogA ;
@@ -23,5 +26,4 @@ private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
 };
 
-#define ITEMDIALOGA_H
 #endif // DIALOGA_H
